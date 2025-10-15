@@ -1,15 +1,21 @@
-import {Task} from "../dto/Task";
+import {
+    DateFormatterArgType,
+    EnumFormatterArgType,
+    Task,
+    TextFormatterArgType,
+    UpdateTaskPayload
+} from "../dto/Task";
 import {parseTask} from "./taskParsers";
 
-const dateFormatter = (value: Date | string | undefined) => {
+const dateFormatter = (value: DateFormatterArgType) => {
     if (!value) return '';
-    return new Date(value).toLocaleDateString()
+    return new Date(value).toLocaleDateString();
 };
-const textFormatter = (value: string | number | undefined) => {
+const textFormatter = (value: TextFormatterArgType) => {
     if (!value) return '';
     return value.toString(10);
 };
-const enumFormatter = (value: string | undefined) => {
+const enumFormatter = (value: EnumFormatterArgType) => {
     if (!value) return ''
     return value.charAt(0).toUpperCase() + value.substring(1).replace('_', ' ').toLowerCase()
 }
@@ -19,12 +25,12 @@ const displayTaskDetail = <K extends keyof Task>(key: K, value: Task[K]) => {
         case "createdAt":
         case "doneAt":
         case "deadline":
-            return dateFormatter(value as Date | string | undefined);
+            return dateFormatter(value as DateFormatterArgType);
         case "priority":
         case "status":
-            return enumFormatter(value as string | undefined);
+            return enumFormatter(value as EnumFormatterArgType);
         default:
-            return textFormatter(value as string | number | undefined);
+            return textFormatter(value as TextFormatterArgType);
     }
 }
 
@@ -47,29 +53,29 @@ export const getTaskDetails = (tasks: Task[], taskId: Task["id"]) => {
 }
 
 export const createTask = (tasks: Task[], task: unknown): Task[] => {
-    const {success, error} = parseTask(task);
-    if (success) {
-        const foundTask = tasks.find(task => success.id === task.id);
+    const {result, error} = parseTask(task);
+    if (result) {
+        const foundTask = tasks.find(task => result.id === task.id);
         if (!foundTask) {
-            return [...tasks, success]
+            return [...tasks, result]
 
         } else {
             console.error(`Task with id ${foundTask.id} already exists.`);
         }
     } else {
-        console.error(`Error parsing ${JSON.stringify(task)}`);
+        console.error(error);
     }
     return tasks;
 }
 
-export const updateTaskDetails = (tasks: Task[], taskId: Task["id"], details: Partial<Task>) => {
-    const foundTaskId = tasks.findIndex(task => taskId === task.id);
-    if (foundTaskId === -1) {
+export const updateTaskDetails = (tasks: Task[], taskId: Task["id"], details: UpdateTaskPayload) => {
+    const foundTaskIndex = tasks.findIndex(task => taskId === task.id);
+    if (foundTaskIndex === -1) {
         console.error(`Task with given id ${taskId} was not found`);
         return tasks
     }
-    const newTask = {...tasks[foundTaskId], ...details} as Task;
-    return tasks.map((task, i) => i === foundTaskId ? newTask : task)
+    const newTask: Task = {...tasks[foundTaskIndex]!, ...details};
+    return tasks.map((task, i) => i === foundTaskIndex ? newTask : task)
 };
 
 export const removeTask = (tasks: Task[], taskId: Task['id']) => {

@@ -36,8 +36,6 @@ tasks = createTask(tasks, {                       //error, wrong ID
 tasks = updateTaskDetails(tasks, 905, {status: Status.IN_PROGRESS});
 getTaskDetails(tasks, 905);                       //found, task now in progress
 
-
-
 tasks = removeTask(tasks, 905);
 getTaskDetails(tasks, 905);                       //task disappeared
 

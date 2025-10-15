@@ -1,5 +1,5 @@
 export enum Status {
-    TODO="todo",
+    TODO = "todo",
     IN_PROGRESS = "in_progress",
     DONE = "done"
 }
@@ -23,3 +23,10 @@ export type Task = {
 export type TTaskValidators =  {
     [key: string]: (value: unknown) => boolean | undefined
 }
+
+export type TaskParserOutput =  | {result: Task, error?: never} | {result?: never, error: unknown};
+
+export type DateFormatterArgType = Date | string | undefined;
+export type EnumFormatterArgType = string | undefined;
+export type TextFormatterArgType = string | number | undefined;
+export type UpdateTaskPayload = Partial<Omit<Task, 'id' | 'createdAt'>>;

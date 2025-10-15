@@ -38,4 +38,3 @@ export const parseTasks = (tasks: unknown[]) => {
 
     return successfullyParsedTasks;
 }
-

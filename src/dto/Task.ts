@@ -10,7 +10,7 @@ export enum Priority {
     HIGH = "high"
 }
 export type Task = {
-    id: string | number;
+    id: string;
     title: string;
     description?: string;
     createdAt: Date | string;

@@ -74,7 +74,7 @@ export const updateTaskDetails = (tasks: Task[], taskId: Task["id"], details: Up
         console.error(`Task with given id ${taskId} was not found`);
         return tasks
     }
-    const newTask = {...tasks[foundTaskIndex]!, ...details};
+    const newTask = {...tasks[foundTaskIndex], ...details};
     return tasks.map((task, i) => i === foundTaskIndex ? newTask : task)
 };
 
